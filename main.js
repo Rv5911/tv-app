@@ -1,19 +1,22 @@
-import { getAllMacIds, getDeviceMacId, getM3UUrl } from "./api/apiFunctions.js";
-import { parseM3UContent } from "./utils/parseM3U.js";
+import { createRouter } from "./router/router.js";
+import Navbar from "./components/Navbar.js";
+import NotFoundPage from "./pages/NotFoundPage.js";
+import SearchPage from "./pages/SearchPage.js";
+import MoviesPage from "./pages/MoviesPage.js";
+import SeriesPage from "./pages/SeriesPage.js";
+import LiveTvPage from "./pages/LiveTvPage.js";
 
-const deviceMacId = localStorage.getItem("deviceMacId");
+// Define routes
+const routes = {
+    "/": SearchPage,
+    "/movies": MoviesPage,
+    "/series": SeriesPage,
+    "/live-tv": LiveTvPage,
+    "*": NotFoundPage, // Catch-all for 404 pages
+};
 
-getDeviceMacId().then((data) => {
-    console.log(data, "getDeviceMacId");
-})
+// Render navbar
+document.body.insertAdjacentHTML("afterbegin", Navbar());
 
-getM3UUrl(deviceMacId).then((data) => {
-    parseM3UContent(data?.link).then((data) => {
-        console.log(data, "parseM3UContent");
-    })
-});
-
-getAllMacIds().then((data) => {
-    console.log(data, "getAllMacIds");
-});
-
+// Initialize the router
+createRouter(routes);

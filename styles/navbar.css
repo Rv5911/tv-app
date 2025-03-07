@@ -1,0 +1,17 @@
+.navbar-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 50px;
+}
+
+.navbar-link {
+    text-decoration: none;
+    color: #fff;
+    margin: 0 10px;
+}
+
+
+.navbar-active {
+    color: #000;
+}
