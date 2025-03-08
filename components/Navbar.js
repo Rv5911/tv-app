@@ -21,6 +21,10 @@ export default function Navbar() {
             .navbar a:hover {
                 background: #555;
             }
+            .navbar a.active {
+                background: #777;
+                font-weight: bold;
+            }
         </style>
     `;
 }

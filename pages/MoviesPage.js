@@ -1,6 +1,10 @@
 function MoviesPage() {
     return `
-        <h1>Movies</h1>
+
+    <div class="movies-page">
+    
+    <h1>Movies</h1>
+    </div>
     `;
 }
 
