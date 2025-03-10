@@ -1,5 +1,5 @@
 import { navigateTo } from "../router/router.js";
-import { registerRemoteNavigation } from "./remoteNavigation.js";
+import { registerRemoteNavigation, setActiveNavigation } from "./remoteNavigation.js";
 
 export default function Navbar() {
     setTimeout(() => {
@@ -34,20 +34,58 @@ export const handleLogoClick = () => {
 
 // Handle TV Remote Navigation
 function handleRemoteNavigation() {
-    registerRemoteNavigation("navbar", (event) => {
-        const navItems = document.querySelectorAll(".nav-item");
-        let currentIndex = Array.from(navItems).findIndex((item) => item.classList.contains("active"));
+    let isActive = true;
+    let currentIndex = 0;
 
-        if (event.key === "ArrowRight") {
-            currentIndex = (currentIndex + 1) % navItems.length;
-        } else if (event.key === "ArrowLeft") {
-            currentIndex = (currentIndex - 1 + navItems.length) % navItems.length;
-        } else if (event.key === "Enter") {
-            navItems[currentIndex]?.click();
+    function updateFocus() {
+        const navItems = document.querySelectorAll(".nav-item");
+        navItems.forEach((item, index) => {
+            item.classList.remove('active', 'focused');
+            if (isActive && index === currentIndex) {
+                item.classList.add('active', 'focused');
+            }
+        });
+    }
+
+    function handleNavigation(event) {
+        // Handle component switching
+        if (event.type === 'component-switch') {
+            isActive = event.active === 'navbar';
+            updateFocus();
+            return;
         }
 
-        // Highlight the active item
-        navItems.forEach((item) => item.classList.remove("active"));
-        navItems[currentIndex]?.classList.add("active");
+        if (!isActive) return;
+
+        const navItems = document.querySelectorAll(".nav-item");
+        
+        switch (event.key) {
+            case 'ArrowRight':
+                currentIndex = (currentIndex + 1) % navItems.length;
+                break;
+            case 'ArrowLeft':
+                currentIndex = (currentIndex - 1 + navItems.length) % navItems.length;
+                break;
+            case 'Enter':
+                navItems[currentIndex]?.click();
+                break;
+            default:
+                return;
+        }
+
+        event.preventDefault();
+        updateFocus();
+    }
+
+    registerRemoteNavigation("navbar", handleNavigation);
+
+    // Handle click activation
+    document.querySelector('.navbar').addEventListener('click', () => {
+        isActive = true;
+        setActiveNavigation('navbar');
+        updateFocus();
     });
+
+    // Initial focus
+    updateFocus();
 }

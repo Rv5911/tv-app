@@ -1,14 +1,129 @@
 import { getData } from "../utils/parseM3U.js";
 import { Loader, showLoader, hideLoader } from "../components/Loader.js";
+import { registerRemoteNavigation, unregisterRemoteNavigation, setActiveNavigation } from "../components/remoteNavigation.js";
 
 function MoviesPage() {
-    setTimeout(fetchMoviesData, 0);
+    setTimeout(() => {
+        fetchMoviesData();
+        setupRemoteNavigation();
+    }, 0);
 
     return `
         <div class="movies-page">
             ${Loader()}
         </div>
     `;
+}
+
+function setupRemoteNavigation() {
+    let currentGroupIndex = 0;
+    let currentCardIndex = 0;
+    let isActive = false;
+
+    function updateFocus(forceActive = false) {
+        // Remove existing focus
+        document.querySelectorAll('.movie-card.focused, .group-title.focused')
+            .forEach(el => el.classList.remove('focused'));
+
+        if (!isActive && !forceActive) return;
+
+        const groups = document.querySelectorAll('.movie-group');
+        if (!groups.length) return;
+
+        const currentGroup = groups[currentGroupIndex];
+        const cards = currentGroup.querySelectorAll('.movie-card');
+
+        // Update group focus
+        currentGroup.querySelector('.group-title').classList.add('focused');
+
+        // Update card focus
+        if (cards.length) {
+            currentCardIndex = Math.min(currentCardIndex, cards.length - 1);
+            const currentCard = cards[currentCardIndex];
+            currentCard.classList.add('focused');
+            currentCard.scrollIntoView({ 
+                behavior: 'smooth', 
+                block: 'center',
+                inline: 'center' ,
+                offsetTop: 100
+            });
+        }
+    }
+
+    function handleNavigation(event) {
+        // Handle component switching
+        if (event.type === 'component-switch') {
+            isActive = event.active === 'movies-page';
+            updateFocus();
+            return;
+        }
+
+        if (!isActive) return;
+
+        const groups = document.querySelectorAll('.movie-group');
+        if (!groups.length) return;
+
+        const currentGroup = groups[currentGroupIndex];
+        const cards = currentGroup.querySelectorAll('.movie-card');
+
+        switch (event.key) {
+            case 'ArrowUp':
+                if (currentGroupIndex > 0) {
+                    currentGroupIndex--;
+                    currentCardIndex = 0;
+                }
+                break;
+            case 'ArrowDown':
+                if (currentGroupIndex < groups.length - 1) {
+                    currentGroupIndex++;
+                    currentCardIndex = 0;
+                }
+                break;
+            case 'ArrowLeft':
+                if (currentCardIndex > 0) {
+                    currentCardIndex--;
+                }
+                break;
+            case 'ArrowRight':
+                if (currentCardIndex < cards.length - 1) {
+                    currentCardIndex++;
+                }
+                break;
+            case 'Enter':
+                if (cards[currentCardIndex]) {
+                    const url = cards[currentCardIndex].dataset.url;
+                    if (url) alert('Movie URL: ' + url);
+                }
+                break;
+            default:
+                return;
+        }
+
+        event.preventDefault();
+        updateFocus();
+    }
+
+    // Register navigation
+    registerRemoteNavigation('movies-page', handleNavigation);
+
+    // Handle click activation
+    document.querySelector('.movies-page').addEventListener('click', () => {
+        isActive = true;
+        setActiveNavigation('movies-page');
+        updateFocus();
+    });
+
+    // Export the focus update function so it can be called from outside
+    window.updateMoviesFocus = () => {
+        isActive = true;
+        setActiveNavigation('movies-page');
+        updateFocus(true);
+    };
+
+    return () => {
+        unregisterRemoteNavigation('movies-page');
+        delete window.updateMoviesFocus;
+    };
 }
 
 async function fetchMoviesData() {
@@ -91,6 +206,13 @@ function displayMoviesByGroup(movies) {
             }
         });
     });
+
+    // Set initial focus after a short delay to ensure DOM is ready
+    setTimeout(() => {
+        if (window.updateMoviesFocus) {
+            window.updateMoviesFocus();
+        }
+    }, 100);
 }
 
 export default MoviesPage;
