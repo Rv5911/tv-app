@@ -10,3 +10,12 @@ body {
     padding: 0;
 }
 
+/* Audio fix for video elements */
+video {
+    /* Ensure audio is enabled by default */
+    audio: auto !important;
+    /* Ensure video is visible */
+    opacity: 1 !important;
+    visibility: visible !important;
+}
+

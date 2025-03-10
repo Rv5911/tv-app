@@ -1,6 +1,7 @@
 import { getData } from "../utils/parseM3U.js";
 import { Loader, showLoader, hideLoader } from "../components/Loader.js";
 import { registerRemoteNavigation, unregisterRemoteNavigation, setActiveNavigation } from "../components/remoteNavigation.js";
+import { VideoPlayer } from "../components/VideoPlayer.js";
 
 function MoviesPage() {
     setTimeout(() => {
@@ -92,7 +93,10 @@ function setupRemoteNavigation() {
             case 'Enter':
                 if (cards[currentCardIndex]) {
                     const url = cards[currentCardIndex].dataset.url;
-                    if (url) alert('Movie URL: ' + url);
+                    const title = cards[currentCardIndex].querySelector('.movie-title').textContent;
+                    if (url) {
+                        playVideo(url, title);
+                    }
                 }
                 break;
             default:
@@ -124,6 +128,51 @@ function setupRemoteNavigation() {
         unregisterRemoteNavigation('movies-page');
         delete window.updateMoviesFocus;
     };
+}
+
+// Function to play a video with the VideoPlayer component
+function playVideo(url, title) {
+    // Check if URL is valid
+    if (!url || url.trim() === '') {
+        alert('No valid video URL available for this movie.');
+        return;
+    }
+
+    // Log the video URL for debugging
+    console.log('Playing video:', title);
+    console.log('Video URL:', url);
+
+    // Try to validate the URL
+    let videoUrl = url;
+    
+    // If URL doesn't start with http/https, try to add it
+    if (!url.startsWith('http://') && !url.startsWith('https://')) {
+        if (url.startsWith('//')) {
+            videoUrl = 'https:' + url;
+        } else {
+            videoUrl = 'https://' + url;
+        }
+        console.log('Modified URL to:', videoUrl);
+    }
+
+    // Use local subtitle files
+    const subtitles = [
+        {
+            language: 'en',
+            label: 'English',
+            url: 'subtitles/english.vtt',
+            default: true
+        },
+        {
+            language: 'es',
+            label: 'Spanish',
+            url: 'subtitles/spanish.vtt',
+            default: false
+        }
+    ];
+
+    // Append the video player to the body directly
+    document.body.insertAdjacentHTML('beforeend', VideoPlayer(videoUrl, title, subtitles));
 }
 
 async function fetchMoviesData() {
@@ -201,8 +250,9 @@ function displayMoviesByGroup(movies) {
     movieCards.forEach(card => {
         card.addEventListener('click', () => {
             const url = card.dataset.url;
+            const title = card.querySelector('.movie-title').textContent;
             if (url) {
-                alert('Movie URL: ' + url);
+                playVideo(url, title);
             }
         });
     });
