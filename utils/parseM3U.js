@@ -1,11 +1,10 @@
 export async function parseM3UContent(m3uUrl) {
     const backendUrl = 'http://127.0.0.1:3000';
     const m3uFilePath = `${backendUrl}${m3uUrl}`;
-
     try {
         console.log('Fetching M3U file from:', m3uFilePath);
         
-        const response = await fetch(m3uFilePath);
+        const response = await fetch(m3uUrl);
         const content = await response.text();
 
         const movies = [];
@@ -99,7 +98,7 @@ function extractMetadata(extinfLine) {
 // ✅ Open IndexedDB Database
 function openDatabase() {
     return new Promise((resolve, reject) => {
-        const request = indexedDB.open('mediaDatabase', 1);
+        const request = indexedDB.open('ottdatabase', 1);
 
         request.onerror = () => reject(request.error);
         request.onsuccess = () => resolve(request.result);
@@ -131,6 +130,8 @@ function storeData(db, storeName, data) {
     });
 }
 
+
+
 export function clearData(db, storeName) {
   return new Promise((resolve, reject) => {
     const transaction = db.transaction(storeName, 'readwrite');
@@ -139,4 +140,27 @@ export function clearData(db, storeName) {
     transaction.oncomplete = () => resolve();
     transaction.onerror = () => reject(transaction.error);
   });       
+}
+
+export function getData(storeName) {
+    return new Promise((resolve, reject) => {
+        const request = indexedDB.open("ottdatabase", 1);
+
+        request.onerror = () => reject(request.error);
+        
+        request.onsuccess = () => {
+            const db = request.result;
+
+            if (!db.objectStoreNames.contains(storeName)) {
+                return reject(new Error(`Object store "${storeName}" not found.`));
+            }
+
+            const transaction = db.transaction(storeName, "readonly");
+            const store = transaction.objectStore(storeName);
+            const getRequest = store.getAll();
+
+            getRequest.onsuccess = () => resolve(getRequest.result);
+            getRequest.onerror = () => reject(getRequest.error);
+        };
+    });
 }

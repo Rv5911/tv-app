@@ -1,30 +1,20 @@
 export default function Navbar() {
     return `
         <nav class="navbar">
-            <a href="/" data-link>Home</a>
-            <a href="/movies" data-link>Movies</a>
-            <a href="/series" data-link>Series</a>
-            <a href="/live-tv" data-link>Live TV</a>
+            <a href="#/" data-link class="${isActive('/')}">Home</a>
+            <a href="#/movies" data-link class="${isActive('/movies')}">Movies</a>
+            <a href="#/series" data-link class="${isActive('/series')}">Series</a>
+            <a href="#/live-tv" data-link class="${isActive('/live-tv')}">Live TV</a>
         </nav>
-        <style>
-            .navbar {
-                display: flex;
-                justify-content: center;
-                background: #333;
-                padding: 10px;
-            }
-            .navbar a {
-                color: white;
-                padding: 10px 20px;
-                text-decoration: none;
-            }
-            .navbar a:hover {
-                background: #555;
-            }
-            .navbar a.active {
-                background: #777;
-                font-weight: bold;
-            }
-        </style>
     `;
 }
+
+// ✅ Function to check if the current route matches and return "active"
+function isActive(route) {
+    return window.location.hash === `#${route}` ? "active" : "";
+}
+
+// ✅ Listen for hash change to update the navbar on route changes
+window.addEventListener("hashchange", () => {
+    document.querySelector(".navbar").innerHTML = Navbar();
+});

@@ -1,12 +1,11 @@
 let routes = {}; // Store routes globally
 
-export function navigateTo(url) {
-    window.history.pushState(null, null, url); // Change the URL without reloading
-    router(); // Re-render content
+export function navigateTo(hash) {
+    window.location.hash = hash; // Change the URL using hash
 }
 
 function router() {
-    const path = window.location.pathname;
+    const path = window.location.hash.slice(1) || "/"; // Get hash route or default to "/"
     const app = document.getElementById("app");
 
     // Render the corresponding component or show 404
@@ -33,16 +32,16 @@ function updateActiveNav() {
     document.querySelectorAll(".navbar a").forEach(link => link.classList.remove("active"));
 
     // Find the matching route and set it active
-    const activeRoute = window.location.pathname;
-    document.querySelector(`.navbar a[href='${activeRoute}']`)?.classList.add("active");
+    const activeRoute = window.location.hash.slice(1) || "/";
+    document.querySelector(`.navbar a[href='#${activeRoute}']`)?.classList.add("active");
 }
 
 export function createRouter(userRoutes) {
     routes = userRoutes; // Store routes globally
 
-    // Handle back/forward navigation
-    window.onpopstate = router;
+    // Handle hash change event
+    window.addEventListener("hashchange", router);
 
-    // Ensure the router is initialized on page load
+    // Initialize router when page loads
     window.addEventListener("DOMContentLoaded", router);
 }
