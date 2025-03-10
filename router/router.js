@@ -15,16 +15,8 @@ function router() {
         app.innerHTML = routes["*"] ? routes["*"]() : "<h1>404 Not Found</h1>";
     }
 
-    // Update Navbar Active Class
+    // Update Navbar Active Class (without re-rendering the navbar)
     updateActiveNav();
-
-    // Re-attach event listeners for internal navigation
-    document.querySelectorAll("[data-link]").forEach((link) => {
-        link.addEventListener("click", (event) => {
-            event.preventDefault();
-            navigateTo(event.target.getAttribute("href"));
-        });
-    });
 }
 
 function updateActiveNav() {

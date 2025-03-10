@@ -6,7 +6,6 @@ import MoviesPage from "./pages/MoviesPage.js";
 import SeriesPage from "./pages/SeriesPage.js";
 import LiveTvPage from "./pages/LiveTvPage.js";
 import { getAllMacIds, getDeviceMacId, getM3UUrl } from "./api/apiFunctions.js";
-import { parseM3UContent } from "./utils/parseM3U.js";
 
 // Define routes
 const routes = {

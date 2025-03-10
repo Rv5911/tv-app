@@ -1,3 +1,8 @@
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
 body {
     font-family: Arial, sans-serif;
     text-align: center;
@@ -5,18 +10,3 @@ body {
     padding: 0;
 }
 
-nav {
-    background: #333;
-    padding: 15px;
-}
-
-nav a {
-    margin: 0 15px;
-    text-decoration: none;
-    color: white;
-    font-weight: bold;
-}
-
-nav a:hover {
-    color: lightgray;
-}
