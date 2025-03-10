@@ -54,13 +54,28 @@ function initializePlayer(playerId, videoUrl, subtitles = []) {
     // Get single loader element
     const singleLoader = document.getElementById('single-loader');
     
-    // Hide all other loaders
+    // Hide all other loaders and the big play button
     const hideAllLoaders = document.createElement('style');
     hideAllLoaders.textContent = `
         .vjs-loading-spinner, 
         .custom-loading-overlay, 
-        .global-loading-indicator { 
+        .global-loading-indicator,
+        .vjs-big-play-button { 
             display: none !important; 
+        }
+        
+        /* Ensure our custom loader is visible and positioned correctly */
+        .single-loader {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+            background-color: rgba(0, 0, 0, 0.5);
         }
     `;
     document.head.appendChild(hideAllLoaders);
@@ -82,6 +97,8 @@ function initializePlayer(playerId, videoUrl, subtitles = []) {
         },
         liveui: false,
         debug: true,
+        bigPlayButton: false, // Disable the default big play button
+        loadingSpinner: false, // Disable the default loading spinner
         controlBar: {
             children: [
                 'playToggle',
@@ -159,6 +176,11 @@ function initializePlayer(playerId, videoUrl, subtitles = []) {
         if (singleLoader) {
             singleLoader.style.display = 'flex';
         }
+        // Ensure the big play button is hidden during loading
+        const bigPlayButton = document.querySelector('.vjs-big-play-button');
+        if (bigPlayButton) {
+            bigPlayButton.style.display = 'none';
+        }
     });
 
     // Only hide loading when video is actually playing
@@ -194,6 +216,12 @@ function initializePlayer(playerId, videoUrl, subtitles = []) {
 
     // Enter fullscreen mode
     player.ready(function() {
+        // Hide the big play button immediately on ready
+        const bigPlayButton = document.querySelector('.vjs-big-play-button');
+        if (bigPlayButton) {
+            bigPlayButton.style.display = 'none';
+        }
+        
         setTimeout(() => {
             if (player.isFullscreen() === false) {
                 player.requestFullscreen();
