@@ -1,23 +1,33 @@
-*{
+/* Variables */
+:root {
+    --primary-color: #00ccff;
+    --background-dark: #1a1a1a;
+    --text-light: #ffffff;
+    --text-secondary: rgba(255, 255, 255, 0.7);
+    --hover-bg: rgba(255, 255, 255, 0.1);
+    --card-bg: rgba(255, 255, 255, 0.05);
+    --card-hover-bg: rgba(255, 255, 255, 0.1);
+    --card-focus-bg: rgba(255, 255, 255, 0.15);
+    --focus-outline: 3px solid var(--primary-color);
+    --focus-glow: 0 0 20px rgba(0, 204, 255, 0.4);
+}
+
+/* Base Styles */
+* {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
 }
+
 body {
     font-family: Arial, sans-serif;
-    text-align: center;
-    margin: 0;
-    padding: 0;
+    background: var(--background-dark);
+    color: var(--text-light);
+    line-height: 1.5;
 }
 
-/* Audio fix for video elements */
-video {
-    /* Ensure audio is enabled by default */
-    audio: auto !important;
-    /* Ensure video is visible */
-    opacity: 1 !important;
-    visibility: visible !important;
-}
+/* Series Page */
+
 
 
 

@@ -10,8 +10,7 @@ export default function Navbar() {
     return `
         <div class="navbar-container">
             <div class="navbar-logo">
-                <img src="https://static.vecteezy.com/system/resources/previews/009/024/527/non_2x/ott-logo-ott-letter-ott-letter-logo-design-initials-ott-logo-linked-with-circle-and-uppercase-monogram-logo-ott-typography-for-technology-business-and-real-estate-brand-vector.jpg" 
-                     alt="logo">
+                <img src="public/assets/logo.png" alt="logo">
             </div>
             <nav class="navbar">
                 <a href="#/" data-link class="nav-item">Home</a>

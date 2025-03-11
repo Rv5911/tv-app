@@ -1,12 +1,9 @@
-/* Series Page Styles */
 .series-page {
     min-height: 100vh;
     background: #f8f9fa;
 }
 
-.series-group {
-    padding: 20px;
-}
+
 
 .series-list {
     display: flex;
@@ -168,6 +165,7 @@
 .series-group {
     color: var(--accent-color);
     font-size: 0.9rem;
+    padding: 10px;
 }
 
 .series-seasons {

@@ -58,8 +58,7 @@ function createSeasonTabs(seasons) {
         <div class="season-tabs">
             ${seasonNumbers.map((season, index) => `
                 <button class="season-tab ${index === 0 ? 'active' : ''}" 
-                        data-season="${season}"
-                        onclick="switchSeason(${season})">
+                        data-season="${season}">
                     Season ${season}
                 </button>
             `).join('')}
@@ -132,6 +131,7 @@ function setupDetailPageNavigation() {
     window.switchSeason = function(seasonNumber) {
         document.querySelectorAll('.season-tab').forEach(tab => {
             tab.classList.toggle('active', tab.dataset.season == seasonNumber);
+            tab.classList.toggle('focused', false);
         });
         
         document.querySelectorAll('.season-episodes').forEach(episodes => {
@@ -140,25 +140,47 @@ function setupDetailPageNavigation() {
 
         // Reset episode focus
         currentEpisodeIndex = 0;
+        currentFocus = 'episodes';
         updateFocus();
     };
 
     let isActive = true;
     let currentEpisodeIndex = 0;
+    let currentFocus = 'episodes'; // 'back', 'seasons', 'episodes'
 
     function updateFocus() {
-        const activeSeasonEpisodes = document.querySelector('.season-episodes.active .episode-card');
-        if (!activeSeasonEpisodes) return;
+        // Clear all focus states
+        document.querySelectorAll('.focused').forEach(el => el.classList.remove('focused'));
 
-        const episodes = document.querySelectorAll('.season-episodes.active .episode-card');
-        episodes.forEach(episode => episode.classList.remove('focused'));
-        
-        if (episodes[currentEpisodeIndex]) {
-            episodes[currentEpisodeIndex].classList.add('focused');
-            episodes[currentEpisodeIndex].scrollIntoView({
-                behavior: 'smooth',
-                block: 'center'
-            });
+        if (!isActive) return;
+
+        switch (currentFocus) {
+            case 'back':
+                backButton.classList.add('focused');
+                break;
+            case 'seasons':
+                const seasonTabs = document.querySelectorAll('.season-tab');
+                const activeTab = document.querySelector('.season-tab.active');
+                const tabIndex = Array.from(seasonTabs).indexOf(activeTab);
+                if (seasonTabs[tabIndex]) {
+                    seasonTabs[tabIndex].classList.add('focused');
+                    seasonTabs[tabIndex].scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'nearest',
+                        inline: 'center'
+                    });
+                }
+                break;
+            case 'episodes':
+                const episodes = document.querySelectorAll('.season-episodes.active .episode-card');
+                if (episodes.length && episodes[currentEpisodeIndex]) {
+                    episodes[currentEpisodeIndex].classList.add('focused');
+                    episodes[currentEpisodeIndex].scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'center'
+                    });
+                }
+                break;
         }
     }
 
@@ -166,39 +188,94 @@ function setupDetailPageNavigation() {
         if (!isActive) return;
 
         const episodes = document.querySelectorAll('.season-episodes.active .episode-card');
-        if (!episodes.length) return;
+        const seasonTabs = document.querySelectorAll('.season-tab');
+        const activeTabIndex = Array.from(seasonTabs).findIndex(tab => tab.classList.contains('active'));
 
         switch (event.key) {
             case 'ArrowUp':
-                if (currentEpisodeIndex > 0) {
-                    currentEpisodeIndex--;
+                switch (currentFocus) {
+                    case 'episodes':
+                        if (currentEpisodeIndex > 0) {
+                            currentEpisodeIndex--;
+                        } else {
+                            currentFocus = 'seasons';
+                        }
+                        break;
+                    case 'seasons':
+                        currentFocus = 'back';
+                        break;
                 }
                 break;
             case 'ArrowDown':
-                if (currentEpisodeIndex < episodes.length - 1) {
-                    currentEpisodeIndex++;
+                switch (currentFocus) {
+                    case 'back':
+                        currentFocus = 'seasons';
+                        break;
+                    case 'seasons':
+                        if (episodes.length > 0) {
+                            currentFocus = 'episodes';
+                            currentEpisodeIndex = 0;
+                        }
+                        break;
+                    case 'episodes':
+                        if (currentEpisodeIndex < episodes.length - 1) {
+                            currentEpisodeIndex++;
+                        }
+                        break;
                 }
                 break;
             case 'ArrowLeft':
-                const prevTab = document.querySelector('.season-tab.active').previousElementSibling;
-                if (prevTab) {
-                    window.switchSeason(prevTab.dataset.season);
+                switch (currentFocus) {
+                    case 'seasons':
+                        if (activeTabIndex > 0) {
+                            window.switchSeason(Number(seasonTabs[activeTabIndex - 1].dataset.season));
+                        }
+                        break;
+                    case 'episodes':
+                        if (currentEpisodeIndex > 0) {
+                            currentEpisodeIndex--;
+                        }
+                        break;
                 }
                 break;
             case 'ArrowRight':
-                const nextTab = document.querySelector('.season-tab.active').nextElementSibling;
-                if (nextTab) {
-                    window.switchSeason(nextTab.dataset.season);
+                switch (currentFocus) {
+                    case 'seasons':
+                        if (activeTabIndex < seasonTabs.length - 1) {
+                            window.switchSeason(Number(seasonTabs[activeTabIndex + 1].dataset.season));
+                        }
+                        break;
+                    case 'episodes':
+                        if (currentEpisodeIndex < episodes.length - 1) {
+                            currentEpisodeIndex++;
+                        }
+                        break;
                 }
                 break;
             case 'Enter':
-                const episode = episodes[currentEpisodeIndex];
-                if (episode) {
-                    const url = episode.dataset.url;
-                    const title = episode.querySelector('.episode-title')?.textContent;
-                    if (url) {
-                        playEpisode(url, title);
-                    }
+                switch (currentFocus) {
+                    case 'back':
+                        closeSeriesDetail();
+                        break;
+                    case 'seasons':
+                        const focusedTab = document.querySelector('.season-tab.focused');
+                        if (focusedTab) {
+                            const seasonNumber = Number(focusedTab.dataset.season);
+                            window.switchSeason(seasonNumber);
+                            currentFocus = 'episodes';
+                            currentEpisodeIndex = 0;
+                        }
+                        break;
+                    case 'episodes':
+                        const episode = episodes[currentEpisodeIndex];
+                        if (episode) {
+                            const url = episode.dataset.url;
+                            const title = episode.querySelector('.episode-title')?.textContent;
+                            if (url) {
+                                playEpisode(url, title);
+                            }
+                        }
+                        break;
                 }
                 break;
             case 'Escape':
@@ -216,7 +293,10 @@ function setupDetailPageNavigation() {
     setActiveNavigation('series-detail');
 
     // Set initial focus
-    setTimeout(updateFocus, 100);
+    setTimeout(() => {
+        currentFocus = 'episodes';
+        updateFocus();
+    }, 100);
 
     return () => {
         unregisterRemoteNavigation('series-detail');
