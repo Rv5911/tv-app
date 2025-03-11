@@ -1,0 +1,51 @@
+.settings-page {
+    padding: 2rem;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.settings-title {
+    font-size: 2.5rem;
+    color: var(--text-primary-color);
+    margin-bottom: 2rem;
+    border-bottom: 2px solid var(--primary-color);
+    padding-bottom: 0.5rem;
+    display: inline-block;
+}
+
+.settings-section {
+    margin-bottom: 3rem;
+}
+
+.settings-section-title {
+    font-size: 1.8rem;
+    color: var(--text-primary-color);
+    margin-bottom: 1.5rem;
+    position: relative;
+    padding-left: 1rem;
+}
+
+.settings-section-title::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    width: 4px;
+    background-color: var(--primary-color);
+    border-radius: 4px;
+}
+
+.about-info {
+    background-color: var(--card-bg-color);
+    padding: 1.5rem;
+    border-radius: 12px;
+    box-shadow: var(--card-shadow);
+}
+
+.about-info p {
+    margin: 0.5rem 0;
+    color: var(--text-secondary-color);
+    font-size: 1rem;
+    line-height: 1.6;
+} 

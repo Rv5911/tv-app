@@ -93,7 +93,7 @@ function setupRemoteNavigation() {
             case 'Enter':
                 if (cards[currentCardIndex]) {
                     const url = cards[currentCardIndex].dataset.url;
-                    const title = cards[currentCardIndex].querySelector('.movie-title').textContent;
+                    const title = cards[currentCardIndex].querySelector('.movie-title')?.textContent;
                     if (url) {
                         playVideo(url, title);
                     }
@@ -256,7 +256,7 @@ function displayMoviesByGroup(movies) {
     movieCards.forEach(card => {
         card.addEventListener('click', () => {
             const url = card.dataset.url;
-            const title = card.querySelector('.movie-title').textContent;
+            const title = card.querySelector('.movie-title')?.textContent;
             if (url) {
                 playVideo(url, title);
             }

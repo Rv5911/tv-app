@@ -1,0 +1,79 @@
+.theme-selector {
+    padding: 2rem;
+    background-color: var(--card-bg-color);
+    border-radius: 12px;
+    box-shadow: var(--card-shadow);
+    max-width: 600px;
+    margin: 2rem auto;
+}
+
+.theme-selector-title {
+    font-size: 1.5rem;
+    color: var(--text-primary-color);
+    margin-bottom: 1.5rem;
+    text-align: center;
+}
+
+.theme-options {
+    display: flex;
+    justify-content: center;
+    gap: 1.5rem;
+    flex-wrap: wrap;
+}
+
+.theme-option {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    cursor: pointer;
+    padding: 1rem;
+    border-radius: 8px;
+    transition: all 0.3s ease;
+    width: 100px;
+}
+
+.theme-option:hover {
+    background-color: rgba(0, 0, 0, 0.05);
+    transform: translateY(-5px);
+}
+
+.theme-option.active {
+    background-color: rgba(var(--primary-color-rgb, 0, 204, 255), 0.1);
+    border: 2px solid var(--primary-color);
+}
+
+.theme-option.focused {
+    box-shadow: 0 0 0 3px var(--primary-color);
+    transform: scale(1.05);
+}
+
+.theme-color-preview {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    margin-bottom: 0.8rem;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+}
+
+.theme-option span {
+    font-size: 0.9rem;
+    color: var(--text-primary-color);
+    font-weight: 500;
+}
+
+/* Theme color previews */
+.theme-color-preview.theme-default {
+    background: linear-gradient(135deg, #00ccff 0%, #00ff88 100%);
+}
+
+.theme-color-preview.theme-red {
+    background: linear-gradient(135deg, #ff3b30 0%, #ff9500 100%);
+}
+
+.theme-color-preview.theme-green {
+    background: linear-gradient(135deg, #34c759 0%, #30d158 100%);
+}
+
+.theme-color-preview.theme-indigo {
+    background: linear-gradient(135deg, #5856d6 0%, #af52de 100%);
+} 

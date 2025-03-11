@@ -1,5 +1,5 @@
 .movie-group {
-    padding: 20px 
+    padding: 20px;
 }
 
 .group-title {
@@ -8,7 +8,7 @@
     display: flex;
     justify-content: start;
     padding: 10px 0px;
-    color: #1a202c;
+    color: var(--text-primary-color);
     margin: 0 0 1rem 0.5rem;
     padding-bottom: 0.5rem;
     border-bottom: 2px solid #e2e8f0;
@@ -33,10 +33,10 @@
 .movie-card {
     flex: 0 0 auto;
     width: 250px;
-    background: #ffffff;
+    background: var(--card-bg-color);
     border-radius: 12px;
     overflow: hidden;
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    box-shadow: var(--card-shadow);
     transition: all 0.3s ease;
     cursor: pointer;
     position: relative;
@@ -45,7 +45,7 @@
 
 .movie-card:hover {
     transform: translateY(-5px) scale(1.02);
-    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.2);
+    box-shadow: var(--card-shadow-hover);
     z-index: 5;
 }
 
@@ -73,7 +73,7 @@
 .movie-title {
     font-size: 1.1rem;
     font-weight: 600;
-    color: #2d3748;
+    color: var(--text-primary-color);
     margin: 0;
     line-height: 1.4;
     display: -webkit-box;
@@ -86,12 +86,12 @@
 .movie-metadata {
     margin-top: 0.75rem;
     font-size: 0.9rem;
-    color: #718096;
+    color: var(--text-secondary-color);
 }
 
 .movie-card.focused {
     transform: scale(1.08);
-    box-shadow: 0 0 0 3px #00ccff, 0 15px 35px rgba(0, 0, 0, 0.3);
+    box-shadow: var(--card-shadow-focused);
     z-index: 10;
 }
 
@@ -139,7 +139,7 @@
     font-size: 0.9rem;
     opacity: 0.8;
     margin-bottom: 1.5rem;
-    background: rgba(0, 204, 255, 0.3);
+    background: rgba(var(--primary-color-rgb, 0, 204, 255), 0.3);
     padding: 0.3rem 0.8rem;
     border-radius: 20px;
 }
@@ -150,23 +150,23 @@
     color: white;
     margin-top: 1rem;
     transition: all 0.2s ease;
-    filter: drop-shadow(0 0 8px rgba(0, 204, 255, 0.5));
+    filter: drop-shadow(0 0 8px rgba(var(--primary-color-rgb, 0, 204, 255), 0.5));
 }
 
 .movie-card.focused .play-button {
     transform: scale(1.1);
-    color: #00ccff;
+    color: var(--primary-color);
 }
 
 .group-title.focused {
-    color: #00ccff;
+    color: var(--primary-color);
     text-decoration: none;
-    text-shadow: 0 0 10px rgba(0, 204, 255, 0.5);
+    text-shadow: 0 0 10px rgba(var(--primary-color-rgb, 0, 204, 255), 0.5);
     transition: all 0.3s ease;
 }
 
 .nav-item.focused {
-    color: #007bff;
+    color: var(--primary-color);
     font-weight: bold;
     text-decoration: underline;
 }

@@ -1,0 +1,48 @@
+:root {
+    /* Default theme variables */
+    --primary-color: #00ccff;
+    --secondary-color: #00ff88;
+    --accent-color: #031e39;
+    --background-color: #f8f9fa;
+    --card-bg-color: #ffffff;
+    --text-primary-color: #2d3748;
+    --text-secondary-color: #718096;
+    
+    /* Common UI elements */
+    --navbar-bg: var(--accent-color);
+    --navbar-text: #ffffff;
+    --navbar-active: var(--primary-color);
+    --navbar-hover: rgba(255, 255, 255, 0.2);
+    
+    --card-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    --card-shadow-hover: 0 12px 30px rgba(0, 0, 0, 0.2);
+    --card-shadow-focused: 0 0 0 3px var(--primary-color), 0 15px 35px rgba(0, 0, 0, 0.3);
+    
+    --loader-color-1: var(--primary-color);
+    --loader-color-2: var(--secondary-color);
+    
+    --button-bg: var(--primary-color);
+    --button-text: #ffffff;
+    --button-hover: var(--secondary-color);
+}
+
+/* Theme-specific overrides */
+body.theme-red {
+    --navbar-bg: #2c0b0e;
+    --card-shadow-focused: 0 0 0 3px var(--primary-color), 0 15px 35px rgba(255, 59, 48, 0.3);
+}
+
+body.theme-green {
+    --navbar-bg: #0c2912;
+    --card-shadow-focused: 0 0 0 3px var(--primary-color), 0 15px 35px rgba(52, 199, 89, 0.3);
+}
+
+body.theme-indigo {
+    --navbar-bg: #1a1a2e;
+    --card-shadow-focused: 0 0 0 3px var(--primary-color), 0 15px 35px rgba(88, 86, 214, 0.3);
+}
+
+/* Transition for smooth theme changes */
+* {
+    transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+} 

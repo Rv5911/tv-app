@@ -5,7 +5,9 @@ import SearchPage from "./pages/SearchPage.js";
 import MoviesPage from "./pages/MoviesPage.js";
 import SeriesPage from "./pages/SeriesPage.js";
 import LiveTvPage from "./pages/LiveTvPage.js";
+import SettingsPage from "./pages/SettingsPage.js";
 import { getAllMacIds, getDeviceMacId, getM3UUrl } from "./api/apiFunctions.js";
+import { initTheme } from "./utils/themeManager.js";
 
 // Define routes
 const routes = {
@@ -13,8 +15,12 @@ const routes = {
     "/movies": MoviesPage,
     "/series": SeriesPage,
     "/live-tv": LiveTvPage,
+    "/settings": SettingsPage,
     "*": NotFoundPage,
 };
+
+// Initialize theme system
+initTheme();
 
 // Render navbar
 document.body.insertAdjacentHTML("afterbegin", Navbar());
