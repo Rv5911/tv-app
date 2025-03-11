@@ -21,11 +21,30 @@ function router() {
 
 function updateActiveNav() {
     // Remove active class from all links
-    document.querySelectorAll(".navbar a").forEach(link => link.classList.remove("active"));
+    document.querySelectorAll(".navbar a").forEach(link => {
+        // Only remove the active class, preserve the focused class
+        link.classList.remove("active");
+    });
 
     // Find the matching route and set it active
     const activeRoute = window.location.hash.slice(1) || "/";
-    document.querySelector(`.navbar a[href='#${activeRoute}']`)?.classList.add("active");
+    const activeLink = document.querySelector(`.navbar a[href='#${activeRoute}']`);
+    
+    if (activeLink) {
+        activeLink.classList.add("active");
+        
+        // Optionally, if we want to update the currentIndex in the remote navigation
+        // We can dispatch a custom event
+        const navItems = document.querySelectorAll(".navbar a");
+        const index = Array.from(navItems).indexOf(activeLink);
+        
+        if (index !== -1) {
+            const event = new CustomEvent('navbar-route-changed', { 
+                detail: { index } 
+            });
+            document.dispatchEvent(event);
+        }
+    }
 }
 
 export function createRouter(userRoutes) {

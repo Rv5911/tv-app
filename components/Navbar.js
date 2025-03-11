@@ -39,10 +39,26 @@ function handleRemoteNavigation() {
 
     function updateFocus() {
         const navItems = document.querySelectorAll(".nav-item");
+        
+        // First, get the current route to maintain the active state
+        const currentRoute = window.location.hash.slice(1) || "/";
+        
         navItems.forEach((item, index) => {
-            item.classList.remove('active', 'focused');
+            const itemRoute = item.getAttribute('href').slice(1);
+            
+            // Remove focused class from all items
+            item.classList.remove('focused');
+            
+            // Set active class based on current route
+            if (itemRoute === currentRoute) {
+                item.classList.add('active');
+            } else {
+                item.classList.remove('active');
+            }
+            
+            // Add focused class to the currently focused item when navbar is active
             if (isActive && index === currentIndex) {
-                item.classList.add('active', 'focused');
+                item.classList.add('focused');
             }
         });
     }
@@ -88,4 +104,15 @@ function handleRemoteNavigation() {
 
     // Initial focus
     updateFocus();
+    
+    // Also update focus when hash changes
+    window.addEventListener('hashchange', updateFocus);
+
+    // Listen for the custom event from router.js
+    document.addEventListener('navbar-route-changed', (event) => {
+        if (event.detail && typeof event.detail.index === 'number') {
+            currentIndex = event.detail.index;
+            updateFocus();
+        }
+    });
 }
